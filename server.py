@@ -93,27 +93,26 @@ def server_program():
     conn, address = server_socket.accept()
     print("Connection from: " + str(address))
     result = publickey_privatekey()
-    publickey = (result[0],result[1])
-    private_key = (result[0],result[2])
+    publickey = (result[0],result[1]) # publickey generated
+    private_key = (result[0],result[2]) # privatekey generated
     data = publickey
-    conn.send(str(data).encode('utf8')) # send data to the client
+    conn.send(str(data).encode('utf8')) # send publickey to the client
     keyrecv = 0
     while True:
         while (keyrecv == 0):
-            # receive data stream. it won't accept data packet greater than 1024 bytes
             data = conn.recv(1024).decode()
-            encryptedkey = int(data)
-            secertkey = decrypt(private_key, encryptedkey)
+            encryptedkey = int(data) # secertkey received
+            secertkey = decrypt(private_key, encryptedkey) # decrypting the secertkey
             keyrecv = 1
         data = conn.recv(1024).decode()
         if not data:
             # if data is not received break
             break
-        message = messagedecrypt(data,secertkey)
+        message = messagedecrypt(data,secertkey) # message decryption
         print("encrypted message : " + str(data))
         print("from connected user: " + str(message))
         data = input(' -> ')
-        ciphertext = messageencrypt(data,secertkey)
+        ciphertext = messageencrypt(data,secertkey) # message encryption before sending
         conn.send(ciphertext.encode())  # send data to the client
 
     conn.close()  # close the connection

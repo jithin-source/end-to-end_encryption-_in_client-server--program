@@ -45,17 +45,16 @@ def client_program():
     data = client_socket.recv(1024) #  receive publickey from client
     strings = data.decode('utf8')  # decode to unicode string
     public_key = eval(strings)  #change string  into  tuple
-    secertkey = random.randint(100,999)
-    encrypedkey = encrypt(public_key,secertkey)
+    secertkey = random.randint(100,999) # secertkey generated
+    encrypedkey = encrypt(public_key,secertkey) # secertkey encrypted using publickey
     client_socket.send(str(encrypedkey).encode('utf8'))
     message = input(" -> ")  # take input
-
     while message.lower().strip() != 'bye':
 
         ciphertext = messageencrypt(message, secertkey)
         client_socket.send(ciphertext.encode())  # send message
         data = client_socket.recv(1024).decode()  # receive response
-        message = messagedecrypt(data, secertkey)
+        message = messagedecrypt(data, secertkey)  # message is decrypted
         print("encrypted message " + str(data))
         print('Received from server: ' + message)  # show in terminal
 
